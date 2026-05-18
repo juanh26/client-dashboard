@@ -19,11 +19,6 @@ export const demoDashboard = {
       publicSummary:
         "Waiting for confirmation on the milestone labels shown in the dashboard.",
       clientNeedsAction: true,
-      source: {
-        clientSlug: "demo",
-        listId: "demo-list",
-        taskId: "task-1",
-      },
     },
     {
       id: "task-2",
@@ -37,11 +32,6 @@ export const demoDashboard = {
       publicSummary:
         "Creating the first server-side projection from ClickUp data.",
       clientNeedsAction: false,
-      source: {
-        clientSlug: "demo",
-        listId: "demo-list",
-        taskId: "task-2",
-      },
     },
     {
       id: "task-3",
@@ -54,11 +44,6 @@ export const demoDashboard = {
       publicSummary:
         "Checking that internal-only work cannot appear in client routes.",
       clientNeedsAction: false,
-      source: {
-        clientSlug: "demo",
-        listId: "demo-list",
-        taskId: "task-3",
-      },
     },
     {
       id: "task-4",
@@ -72,11 +57,6 @@ export const demoDashboard = {
         "Blocked until the dashboard has a stable source field for public summaries.",
       clientNeedsAction: false,
       blockedReason: "Needs field decision",
-      source: {
-        clientSlug: "demo",
-        listId: "demo-list",
-        taskId: "task-4",
-      },
     },
     {
       id: "task-5",
@@ -89,11 +69,6 @@ export const demoDashboard = {
       ownerLabel: "PulpSense",
       publicSummary: "The first dashboard shell is ready for internal review.",
       clientNeedsAction: false,
-      source: {
-        clientSlug: "demo",
-        listId: "demo-list",
-        taskId: "task-5",
-      },
     },
   ],
 } satisfies ClientDashboard;
@@ -103,12 +78,6 @@ export function getDemoDashboard(clientSlug: string): ClientDashboard {
     ...demoDashboard,
     clientSlug,
     clientName: clientSlug === "demo" ? "Demo Client" : clientSlug,
-    tasks: demoDashboard.tasks.map((task) => ({
-      ...task,
-      source: {
-        ...task.source,
-        clientSlug,
-      },
-    })),
+    tasks: demoDashboard.tasks,
   };
 }

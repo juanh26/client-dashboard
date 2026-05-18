@@ -22,11 +22,6 @@ export type DashboardTask = {
   publicSummary?: string;
   clientNeedsAction: boolean;
   blockedReason?: string;
-  source: {
-    clientSlug: string;
-    listId: string;
-    taskId: string;
-  };
 };
 
 export type ClientDashboard = {

@@ -35,6 +35,8 @@ npm run build
 
 All shadcn/ui components are installed in `src/components/ui/`. Reuse or compose those components before adding custom primitives. Dashboard-specific components belong in `src/components/dashboard/`.
 
+The current shadcn CLI did not materialize a `form.tsx` file when asked for `form`; if form work starts later, run the current shadcn form setup for that CLI version and document the generated pattern before building custom form primitives.
+
 ## Data Safety
 
 Raw ClickUp data must stay server-side. Browser components should receive only projected dashboard DTOs from `src/dashboard/` or a future server-only ClickUp data access layer.
@@ -48,4 +50,4 @@ External data enters the app as `unknown`, is validated, then narrowed into type
 - Vitest coverage for dashboard metrics
 - Pre-commit hook for secrets, formatting/linting, typecheck, and tests
 - shadcn component set installed
-- Vercel connection still requires authenticated project linking
+- Vercel preview deployment is linked under `juanh-2807` / `juan-cruz-s-projects1`

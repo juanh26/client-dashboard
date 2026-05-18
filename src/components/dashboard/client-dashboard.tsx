@@ -6,8 +6,32 @@ import {
   UserRoundCheck,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from "@/components/ui/item";
+import {
+  Progress,
+  ProgressLabel,
+  ProgressValue,
+} from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -31,14 +55,15 @@ const statusLabels: Record<DashboardTask["normalizedStatus"], string> = {
   done: "Done",
 };
 
-const statusTone: Record<DashboardTask["normalizedStatus"], string> = {
-  not_started: "bg-muted text-muted-foreground",
-  in_progress: "bg-sky-100 text-sky-900",
-  review: "bg-amber-100 text-amber-950",
-  waiting_client: "bg-lime-100 text-lime-950",
-  blocked: "bg-red-100 text-red-950",
-  done: "bg-emerald-100 text-emerald-950",
-};
+const statusBadgeClassName: Record<DashboardTask["normalizedStatus"], string> =
+  {
+    not_started: "border-border bg-muted text-muted-foreground",
+    in_progress: "border-primary/25 bg-primary/15 text-foreground",
+    review: "border-accent/40 bg-accent/20 text-foreground",
+    waiting_client: "border-primary/30 bg-primary/20 text-foreground",
+    blocked: "border-destructive/25 bg-destructive/10 text-destructive",
+    done: "border-primary/35 bg-primary/25 text-foreground",
+  };
 
 export function ClientDashboard({
   dashboard,
@@ -105,13 +130,10 @@ export function ClientDashboard({
             <CardTitle>Progress overview</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5">
-            <div>
-              <div className="mb-2 flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Completion</span>
-                <span className="font-medium">{summary.done} done</span>
-              </div>
-              <Progress value={summary.completionRate} />
-            </div>
+            <Progress value={summary.completionRate}>
+              <ProgressLabel>Completion</ProgressLabel>
+              <ProgressValue>{() => `${summary.done} done`}</ProgressValue>
+            </Progress>
             <TaskTable tasks={dashboard.tasks} />
           </CardContent>
         </Card>
@@ -144,16 +166,16 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <Card>
-      <CardContent className="flex min-h-28 items-center justify-between p-5">
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <p className="mt-2 text-3xl font-semibold">{value}</p>
-        </div>
-        <div className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          {icon}
-        </div>
-      </CardContent>
+    <Card size="sm" className="min-h-28">
+      <CardHeader>
+        <CardDescription>{label}</CardDescription>
+        <CardTitle className="text-3xl font-semibold">{value}</CardTitle>
+        <CardAction>
+          <div className="flex size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            {icon}
+          </div>
+        </CardAction>
+      </CardHeader>
     </Card>
   );
 }
@@ -173,7 +195,7 @@ function TaskTable({ tasks }: { tasks: readonly DashboardTask[] }) {
         <TableBody>
           {tasks.map((task) => (
             <TableRow key={task.id}>
-              <TableCell>
+              <TableCell className="min-w-72 whitespace-normal">
                 <div className="font-medium">{task.title}</div>
                 {task.publicSummary ? (
                   <div className="mt-1 max-w-xl text-sm text-muted-foreground">
@@ -182,20 +204,31 @@ function TaskTable({ tasks }: { tasks: readonly DashboardTask[] }) {
                 ) : null}
               </TableCell>
               <TableCell>
-                <Badge
-                  className={statusTone[task.normalizedStatus]}
-                  variant="secondary"
-                >
-                  {statusLabels[task.normalizedStatus]}
-                </Badge>
+                <StatusBadge status={task.normalizedStatus} />
               </TableCell>
-              <TableCell>{task.ownerLabel}</TableCell>
-              <TableCell>{task.dueDate ?? "No date"}</TableCell>
+              <TableCell className="whitespace-normal">
+                {task.ownerLabel}
+              </TableCell>
+              <TableCell className="whitespace-normal">
+                {task.dueDate ?? "No date"}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
+  );
+}
+
+function StatusBadge({
+  status,
+}: {
+  status: DashboardTask["normalizedStatus"];
+}) {
+  return (
+    <Badge className={statusBadgeClassName[status]} variant="outline">
+      {statusLabels[status]}
+    </Badge>
   );
 }
 
@@ -218,20 +251,31 @@ function TaskListCard({
           {title}
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent>
         {tasks.length === 0 ? (
-          <p className="text-sm text-muted-foreground">{emptyText}</p>
+          <Empty className="border">
+            <EmptyHeader>
+              <EmptyTitle>{emptyText}</EmptyTitle>
+              <EmptyDescription>
+                New items will appear here when ClickUp status changes.
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         ) : null}
-        {tasks.map((task) => (
-          <div key={task.id} className="rounded-md border p-3">
-            <div className="text-sm font-medium">{task.title}</div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              {task.blockedReason ??
-                task.publicSummary ??
-                statusLabels[task.normalizedStatus]}
-            </div>
-          </div>
-        ))}
+        <ItemGroup className="gap-3">
+          {tasks.map((task) => (
+            <Item key={task.id} variant="outline">
+              <ItemContent>
+                <ItemTitle className="line-clamp-none">{task.title}</ItemTitle>
+                <ItemDescription className="line-clamp-none">
+                  {task.blockedReason ??
+                    task.publicSummary ??
+                    statusLabels[task.normalizedStatus]}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+          ))}
+        </ItemGroup>
       </CardContent>
     </Card>
   );
