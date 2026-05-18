@@ -1,6 +1,8 @@
-# Client Progress Dashboard
+# Client Dashboard
 
 Next.js client-facing dashboard for showing PulpSense delivery progress from ClickUp without exposing raw ClickUp data.
+
+GitHub: `https://github.com/juanh26/client-dashboard`
 
 ## Stack
 
