@@ -13,7 +13,7 @@ export type DashboardTask = {
   id: string;
   title: string;
   normalizedStatus: NormalizedStatus;
-  rawStatus: string;
+  isIdea?: boolean;
   priority?: "urgent" | "high" | "normal" | "low";
   dueDate?: string;
   updatedAt: string;
@@ -29,6 +29,21 @@ export type ClientDashboard = {
   clientName: string;
   snapshotUpdatedAt: string;
   tasks: DashboardTask[];
+};
+
+export type DashboardSnapshotSource = "clickup" | "mock" | "mixed";
+
+export type DashboardSnapshotError = {
+  clientSlug: string;
+  message: string;
+  status?: number;
+};
+
+export type AdminDashboardSnapshot = {
+  generatedAt: string;
+  source: DashboardSnapshotSource;
+  clients: ClientDashboard[];
+  errors: DashboardSnapshotError[];
 };
 
 export type DashboardSummary = {
