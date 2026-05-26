@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "screenshots": "bash scripts/capture-dashboard-screenshots.sh",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "secrets:check": "secretlint \"**/*\" --secretlintrc .secretlintrc.json",
