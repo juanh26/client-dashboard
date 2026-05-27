@@ -66,13 +66,13 @@ External data enters the app as `unknown`, is validated, then narrowed into type
 ## Environment
 
 - `CLICKUP_API_TOKEN` - optional server-side ClickUp token for live reads.
-- `DASHBOARD_ADMIN_USERNAME` / `DASHBOARD_ADMIN_PASSWORD` - required in production to access `/admin`; development allows `/admin` without these values.
 
 Live ClickUp reads are controlled per client in `src/config/clients.ts`. Mock fallback is used when `CLICKUP_API_TOKEN` is missing, a live read fails, or a secondary widget does not yet have a real source.
 
 ## Current State
 
 - Shared dashboard surface for `/admin` and real client routes such as `/clients/foodready`
+- `/admin` is currently open for demo access.
 - Typed dashboard task model and summary metrics
 - Vitest coverage for dashboard metrics
 - Pre-commit hook for secrets, formatting/linting, typecheck, and tests
